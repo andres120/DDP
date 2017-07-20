@@ -1,0 +1,53 @@
+---
+title: "Disk Latency Visualizer"
+subtitle: "Final Project"
+author: "Andres Chacon Rodriguez"
+date: "July 20, 2017"
+output: 
+  ioslides_presentation: 
+    fig_height: 5.7
+    fig_width: 8.5
+    smaller: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(knitr)
+library(scales)
+library(ggplot2)
+library(plotly)
+lun_data <- readRDS("anonymized.rds")
+dist <- readRDS("dist_sample.rds")
+trend <- readRDS("lun_trend_sample.rds")
+```
+
+## Why visualize disk latency data? 
+<font size="4">Virtualization systems trend to have a massive amount of disks, both virtual and physical, often making difficult to distribute the load evenly across physical disks. Latency data like in the sample below can be easily summarized, but as the number of disks increases methods like spreadsheets or pivot tables are unpractical for an efficient analysis.</font>
+
+```{r slide1, comment=""}
+cbind(Sample=unlist(lun_data[1,]))
+```
+
+## Latency Distribution:
+<font size="4">This plot shows each virtual disk's latency stacked per LUN (physical disk), making very easy to quickly find what LUNs/Virtual disks are overloaded and decide where to migrate virtual disks among other LUNs to spread the load evenly. It also supports LUN/time frame filtering.</font>
+
+```{r dist, echo = F, fig.align='center', fig.height=4}
+dist
+```
+
+## Latency Trend:
+<font size="4">This plot shows the latency trend per LUN (physical disk) helping to visualize the latency variance over the time allowing to easily forecast when disks migrations might be necessary. Same as the distribution plot it also supports LUN/time frame filtering.</font>
+
+```{r trend, echo = F,  fig.align='center', fig.height=4}
+trend
+```
+
+## LUN/Time frame filtering:
+<font size="4">These two options allow to focus the analysis in an specific set of LUNs and time frame, to do so simply type a regular expression to filter the LUNs names and use the slider to limit the report to the desired time span.<br><b>Note: </b>The source code and files for this project can be found <a href="https://github.com/andres120/DDP">here</a> and the Shinyapp is hosted <a href="https://andres120.shinyapps.io/Latency_App/">here</a>.</font>
+```{r fig.width=8, fig.height=4, fig.align='center', echo=FALSE}
+library(png)
+library(grid)
+img <- readPNG("Screen2.png")
+ grid.raster(img)
+```
+
